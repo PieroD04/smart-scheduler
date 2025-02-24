@@ -1,11 +1,12 @@
-import { useForm, SubmitHandler, useFieldArray, Controller, FieldErrors, Control, UseFormClearErrors } from "react-hook-form"
+import { useForm, SubmitHandler, useFieldArray, Controller, FieldErrors, Control, UseFormClearErrors } from "react-hook-form";
 import ScheduleEntry, { DayEnum, ModalityEnum } from "../models/ScheduleEntry";
 import { Session } from "../models/ScheduleEntry";
-import { TextField, InputLabel, Select, MenuItem, Button, Paper } from "@mui/material";
+import { TextField, InputLabel, Select, MenuItem, Button } from "@mui/material";
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import dayjs from "dayjs";
+import { COURSES, PROFESSORS, SCHEDULES } from "../utils/constants";
 
 interface FormInput {
     course: string;
@@ -14,7 +15,7 @@ interface FormInput {
     sessions: Session[];
 }
 
-function areOverlapping(sessions: Session[]) {
+function _areOverlapping(sessions: Session[]) {
     return sessions.some((sessionA, indexA) =>
         sessions.some((sessionB, indexB) =>
             sessionA.day === sessionB.day &&
@@ -25,13 +26,17 @@ function areOverlapping(sessions: Session[]) {
     );
 }
 
-
 export default function ScheduleForm() {
-    const { control, register, handleSubmit, formState: { errors }, setError, clearErrors } = useForm<FormInput>();
+    const { control, register, handleSubmit, formState: { errors }, setError, clearErrors } = useForm<FormInput>({
+        defaultValues: {
+            sessions: [{ day: DayEnum.monday, start: dayjs().hour(8).minute(0), end: dayjs().hour(9).minute(0) } as Session]
+        }
+    });
     const { fields, append, remove } = useFieldArray({
         control,
         name: "sessions"
     });
+    
     const onSubmit: SubmitHandler<FormInput> = (data) => {
         clearErrors("sessions");
         if (data.sessions.length === 0) {
@@ -39,21 +44,19 @@ export default function ScheduleForm() {
             return;
         }
 
-        if (areOverlapping(data.sessions)) {
+        if (_areOverlapping(data.sessions)) {
             setError("sessions", { type: "manual", message: "Sessions cannot overlap." });
             return;
         }
 
-        localStorage.setItem("schedules", JSON.stringify([...JSON.parse(localStorage.getItem("schedules") || "[]"), data as ScheduleEntry]));
-        localStorage.setItem("courses", JSON.stringify([...JSON.parse(localStorage.getItem("courses") || "[]"), data.course]));
-        localStorage.setItem("professors", JSON.stringify([...JSON.parse(localStorage.getItem("professors") || "[]"), data.professor]));
+        localStorage.setItem("schedules", JSON.stringify([...JSON.parse(localStorage.getItem(SCHEDULES) || "[]"), data as ScheduleEntry]));
+        localStorage.setItem("courses", JSON.stringify([...JSON.parse(localStorage.getItem(COURSES) || "[]"), data.course]));
+        localStorage.setItem("professors", JSON.stringify([...JSON.parse(localStorage.getItem(PROFESSORS) || "[]"), data.professor]));
         alert("Schedule submitted successfully!");
     }
 
     return (
-        <Paper elevation={3} className="p-4">
-            <div className="text-center font-semibold text-xl">Schedule Form</div>
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col p-4 gap-2">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col p-4 gap-2">
                 <TextField
                     id="course"
                     label="Course"
@@ -93,7 +96,7 @@ export default function ScheduleForm() {
                             append({ day: DayEnum.monday, start: dayjs().hour(8).minute(0), end: dayjs().hour(9).minute(0) } as Session)
                             clearErrors("sessions")
                         }}
-                    >Add Session</Button>
+                    >Add</Button>
                 </div>
                 {
                     fields.map((field, index) => {
@@ -120,8 +123,6 @@ export default function ScheduleForm() {
                     {errors.sessions?.message}
                 </div>
             </form>
-        </Paper>
-
     )
 }
 
@@ -135,7 +136,7 @@ function SessionForm({ id, onRemove, control, errors, clearErrors }: { id: strin
                     color="error"
                     startIcon={<DeleteIcon />}
                     onClick={() => { onRemove(id) }}
-                >Remove Session</Button>
+                >Remove</Button>
             </div>
             <div className="flex flex-col">
                 <InputLabel id="day-label">Day</InputLabel>

@@ -1,4 +1,4 @@
-import { Dayjs } from "dayjs"
+import { Dayjs } from "dayjs";
 
 export default interface ScheduleEntry {
     course: string;
