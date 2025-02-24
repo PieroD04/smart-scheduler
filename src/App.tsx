@@ -2,7 +2,7 @@ import { createTheme } from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles'
 import Home from './pages/Home'
 import { LocalizationProvider } from '@mui/x-date-pickers'
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
 
 
 function App() {
@@ -25,7 +25,7 @@ function App() {
   })
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
       <ThemeProvider theme={theme}>
         <Home />
       </ThemeProvider>

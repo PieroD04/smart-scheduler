@@ -1,5 +1,3 @@
-import { Dayjs } from "dayjs";
-
 export default interface ScheduleEntry {
     course: string;
     professor: string;
@@ -15,8 +13,8 @@ export enum ModalityEnum {
 
 export interface Session {
     day: DayEnum;
-    start: Dayjs;
-    end: Dayjs;
+    start: Date;
+    end: Date;
 }
 
 export enum DayEnum {

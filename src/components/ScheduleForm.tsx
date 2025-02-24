@@ -5,7 +5,7 @@ import { TextField, InputLabel, Select, MenuItem, Button } from "@mui/material";
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
-import dayjs from "dayjs";
+import { isBefore, isAfter, isEqual, setHours, setMinutes } from "date-fns";
 import { COURSES, PROFESSORS, SCHEDULES } from "../utils/constants";
 
 interface FormInput {
@@ -20,8 +20,8 @@ function _areOverlapping(sessions: Session[]) {
         sessions.some((sessionB, indexB) =>
             sessionA.day === sessionB.day &&
             indexA !== indexB &&
-            dayjs(sessionA.start).isBefore(dayjs(sessionB.end)) &&
-            dayjs(sessionA.end).isAfter(dayjs(sessionB.start))
+            isBefore(sessionA.start, sessionB.end) &&
+            isAfter(sessionA.end, sessionB.start)
         )
     );
 }
@@ -29,7 +29,7 @@ function _areOverlapping(sessions: Session[]) {
 export default function ScheduleForm() {
     const { control, register, handleSubmit, formState: { errors }, setError, clearErrors } = useForm<FormInput>({
         defaultValues: {
-            sessions: [{ day: DayEnum.monday, start: dayjs().hour(8).minute(0), end: dayjs().hour(9).minute(0) } as Session]
+            sessions: [{ day: DayEnum.monday, start: setMinutes(setHours(new Date(), 8), 0), end: setMinutes(setHours(new Date(), 9), 0) }]
         }
     });
     const { fields, append, remove } = useFieldArray({
@@ -49,9 +49,9 @@ export default function ScheduleForm() {
             return;
         }
 
-        localStorage.setItem("schedules", JSON.stringify([...JSON.parse(localStorage.getItem(SCHEDULES) || "[]"), data as ScheduleEntry]));
-        localStorage.setItem("courses", JSON.stringify([...JSON.parse(localStorage.getItem(COURSES) || "[]"), data.course]));
-        localStorage.setItem("professors", JSON.stringify([...JSON.parse(localStorage.getItem(PROFESSORS) || "[]"), data.professor]));
+        localStorage.setItem(SCHEDULES, JSON.stringify([...JSON.parse(localStorage.getItem(SCHEDULES) || "[]"), data as ScheduleEntry]));
+        localStorage.setItem(COURSES, JSON.stringify([...JSON.parse(localStorage.getItem(COURSES) || "[]"), data.course]));
+        localStorage.setItem(PROFESSORS, JSON.stringify([...JSON.parse(localStorage.getItem(PROFESSORS) || "[]"), data.professor]));
         alert("Schedule submitted successfully!");
     }
 
@@ -93,7 +93,7 @@ export default function ScheduleForm() {
                         variant="text"
                         startIcon={<AddIcon />}
                         onClick={() => {
-                            append({ day: DayEnum.monday, start: dayjs().hour(8).minute(0), end: dayjs().hour(9).minute(0) } as Session)
+                            append({ day: DayEnum.monday, start: setMinutes(setHours(new Date(), 8), 0), end: setMinutes(setHours(new Date(), 9), 0) } as Session);
                             clearErrors("sessions")
                         }}
                     >Add</Button>
@@ -186,10 +186,10 @@ function SessionForm({ id, onRemove, control, errors, clearErrors }: { id: strin
                         rules={{
                             validate: (value, formValues) => {
                                 const startValue = formValues.sessions[parseInt(id)].start;
-                                if (dayjs(startValue).isSame(value)) {
+                                if (isEqual(startValue, value)) {
                                     return "Start and end time cannot be the same.";
                                 }
-                                if (dayjs(startValue).isAfter(value)) {
+                                if (isAfter(startValue, value)) {
                                     return "End time must be after start time.";
                                 }
                                 return true;
