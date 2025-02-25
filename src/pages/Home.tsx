@@ -5,10 +5,11 @@ import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import ScheduleList from "../components/ScheduleTable";
 import useEntries from "../hooks/useEntries";
+import Scheduler from "../components/Scheduler";
 
 export default function Home() {
     const [open, setOpen] = useState(false);
-    const { entries, getEntries, deleteEntry } = useEntries();
+    const { entries, getEntries, deleteEntry, selectedEntries } = useEntries();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -30,7 +31,10 @@ export default function Home() {
             <div className="lg:w-3/4 sm:w-full mx-auto">
                 <ScheduleList entries={entries} deleteEntry={deleteEntry} />
             </div>
-            
+            <div className="m-5">
+                <Scheduler entries={selectedEntries} />
+            </div>
+
             <Dialog
                 open={open}
                 onClose={handleClose}

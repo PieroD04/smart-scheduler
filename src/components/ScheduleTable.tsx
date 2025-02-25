@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -15,13 +15,27 @@ import useEntries from '../hooks/useEntries';
 
 export default function ScheduleTable({ entries, deleteEntry }: { entries: ScheduleEntry[], deleteEntry: any }) {
     const [checked, setChecked] = useState<number[]>([]);
-    const { setSelectedEntries } = useEntries();
+    const { selectedEntries, updateSelectedEntries } = useEntries();
+
+    useEffect(() => {
+        const selectedIndexs = entries
+            .map((entry, index) => (selectedEntries.some(sel => sel.course === entry.course) ? index : -1))
+            .filter(index => index !== -1);
+        
+        setChecked(selectedIndexs);
+    }, [entries, selectedEntries]);
 
     const handleToggle = (index: number) => {
-        setChecked(prev =>
-            prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
-        );
-        setSelectedEntries(entries.filter((_, i) => checked.includes(i)));
+        setChecked(prev => {
+            const newChecked = prev.includes(index)
+                ? prev.filter(i => i !== index)
+                : [...prev, index];
+            
+            const updatedSelectedEntries = entries.filter((_, i) => newChecked.includes(i));
+            updateSelectedEntries(updatedSelectedEntries);
+
+            return newChecked;
+        });
     };
 
     const handleDelete = (index: number) => {
