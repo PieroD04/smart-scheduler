@@ -6,56 +6,41 @@ export default function useEntries() {
     const [entries, setEntries] = useState<ScheduleEntry[]>([]);
     const [selectedEntries, setSelectedEntries] = useState<ScheduleEntry[]>([]);
 
-    useEffect(() => {
-        const data = JSON.parse(localStorage.getItem(ENTRIES) || '[]');
-        const formattedEntries = data.map((entry: ScheduleEntry) => ({
+    const parseEntriesFromStorage = (key: string): ScheduleEntry[] => {
+        const data = JSON.parse(localStorage.getItem(key) || '[]');
+        return data.map((entry: ScheduleEntry) => ({
             ...entry,
             sessions: entry.sessions.map(session => ({
                 ...session,
                 start: new Date(session.start),
-                end: new Date(session.end)
-            }))
+                end: new Date(session.end),
+            })),
         }));
-        setEntries(formattedEntries);
-    }, []);
-
-    useEffect(() => {
-        const data = JSON.parse(localStorage.getItem(SELECTED_ENTRIES) || '[]');
-        const formattedEntries = data.map((entry: ScheduleEntry) => ({
-            ...entry,
-            sessions: entry.sessions.map(session => ({
-                ...session,
-                start: new Date(session.start),
-                end: new Date(session.end)
-            }))
-        }));
-        setSelectedEntries(formattedEntries);
-    }, []);
-
-    const updateSelectedEntries = (selectedEntries: ScheduleEntry[]) => {
-        setSelectedEntries(selectedEntries);
-        localStorage.setItem(SELECTED_ENTRIES, JSON.stringify(selectedEntries));
-    }
-
-    const getEntries = () => {
-        const data = JSON.parse(localStorage.getItem(ENTRIES) || '[]');
-        const formattedEntries = data.map((entry: ScheduleEntry) => ({
-            ...entry,
-            sessions: entry.sessions.map(session => ({
-                ...session,
-                start: new Date(session.start),
-                end: new Date(session.end)
-            }))
-        }));
-        setEntries(formattedEntries);
-        return formattedEntries;
     };
 
-    const deleteEntry = (index: number) => {
-        const updatedEntries = entries.filter((_, i) => i !== index);
+    useEffect(() => {
+        setEntries(parseEntriesFromStorage(ENTRIES));
+        setSelectedEntries(parseEntriesFromStorage(SELECTED_ENTRIES));
+    }, []);
+
+    const updateSelectedEntries = (newSelectedEntries: ScheduleEntry[]) => {
+        setSelectedEntries(newSelectedEntries);
+        localStorage.setItem(SELECTED_ENTRIES, JSON.stringify(newSelectedEntries));
+    };
+
+    const getEntries = (): ScheduleEntry[] => {
+        return parseEntriesFromStorage(ENTRIES);
+    };
+
+    const getSelectedEntries = (): ScheduleEntry[] => {
+        return parseEntriesFromStorage(SELECTED_ENTRIES);
+    };
+
+    const deleteEntry = (id: number) => {
+        const updatedEntries = entries.filter((_, i) => i !== id);
         setEntries(updatedEntries);
         localStorage.setItem(ENTRIES, JSON.stringify(updatedEntries));
     };
 
-    return { entries, getEntries, setEntries, deleteEntry, selectedEntries, setSelectedEntries, updateSelectedEntries };
+    return { entries, getEntries, setEntries, deleteEntry, selectedEntries, getSelectedEntries, setSelectedEntries, updateSelectedEntries };
 }

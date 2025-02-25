@@ -1,0 +1,10 @@
+.scheduler-cell {
+    border-width: 1px;
+    border-color: var(--color-gray-300);
+    padding: 0.5rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 75px;
+}

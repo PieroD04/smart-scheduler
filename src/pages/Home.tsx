@@ -9,7 +9,7 @@ import Scheduler from "../components/Scheduler";
 
 export default function Home() {
     const [open, setOpen] = useState(false);
-    const { entries, getEntries, deleteEntry, selectedEntries } = useEntries();
+    const { entries, getEntries, deleteEntry } = useEntries();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -32,7 +32,7 @@ export default function Home() {
                 <ScheduleList entries={entries} deleteEntry={deleteEntry} />
             </div>
             <div className="m-5">
-                <Scheduler entries={selectedEntries} />
+                <Scheduler />
             </div>
 
             <Dialog
