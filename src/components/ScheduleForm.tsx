@@ -15,7 +15,7 @@ interface FormInput {
     sessions: Session[];
 }
 
-function _areOverlapping(sessions: Session[]) {
+function areOverlapping(sessions: Session[]) {
     return sessions.some((sessionA, indexA) =>
         sessions.some((sessionB, indexB) =>
             sessionA.day === sessionB.day &&
@@ -44,7 +44,7 @@ export default function ScheduleForm({ handleDialogClose }: { handleDialogClose:
             return;
         }
 
-        if (_areOverlapping(data.sessions)) {
+        if (areOverlapping(data.sessions)) {
             setError("sessions", { type: "manual", message: "Sessions cannot overlap." });
             return;
         }
