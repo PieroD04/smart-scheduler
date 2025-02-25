@@ -30,6 +30,7 @@ export default function Home() {
             <div className="lg:w-3/4 sm:w-full mx-auto">
                 <ScheduleList entries={entries} deleteEntry={deleteEntry} />
             </div>
+            
             <Dialog
                 open={open}
                 onClose={handleClose}
