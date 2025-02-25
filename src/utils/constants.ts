@@ -1,3 +1,2 @@
-export const SCHEDULES = "schedules";
-export const COURSES = "courses";
-export const PROFESSORS = "professors";
+export const ENTRIES = "entries";
+export const SELECTED_ENTRIES = "selectedEntries";

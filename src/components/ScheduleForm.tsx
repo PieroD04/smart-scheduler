@@ -6,7 +6,7 @@ import { TimeField } from '@mui/x-date-pickers/TimeField';
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { isBefore, isAfter, isEqual, setHours, setMinutes } from "date-fns";
-import { COURSES, PROFESSORS, SCHEDULES } from "../utils/constants";
+import { ENTRIES } from "../utils/constants";
 
 interface FormInput {
     course: string;
@@ -26,7 +26,7 @@ function _areOverlapping(sessions: Session[]) {
     );
 }
 
-export default function ScheduleForm() {
+export default function ScheduleForm({ handleDialogClose }: { handleDialogClose: () => void }) {
     const { control, register, handleSubmit, formState: { errors }, setError, clearErrors } = useForm<FormInput>({
         defaultValues: {
             sessions: [{ day: DayEnum.monday, start: setMinutes(setHours(new Date(), 8), 0), end: setMinutes(setHours(new Date(), 9), 0) }]
@@ -49,9 +49,9 @@ export default function ScheduleForm() {
             return;
         }
 
-        localStorage.setItem(SCHEDULES, JSON.stringify([...JSON.parse(localStorage.getItem(SCHEDULES) || "[]"), data as ScheduleEntry]));
-        localStorage.setItem(COURSES, JSON.stringify([...JSON.parse(localStorage.getItem(COURSES) || "[]"), data.course]));
-        localStorage.setItem(PROFESSORS, JSON.stringify([...JSON.parse(localStorage.getItem(PROFESSORS) || "[]"), data.professor]));
+        localStorage.setItem(ENTRIES, JSON.stringify([...JSON.parse(localStorage.getItem(ENTRIES) || "[]"), data as ScheduleEntry]));;
+
+        handleDialogClose();
         alert("Schedule submitted successfully!");
     }
 
