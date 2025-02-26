@@ -17,11 +17,11 @@ export default function useSelectedEntries() {
     };
 
     const toggleSelectedEntry = (entry: ScheduleEntry) => {
-        const isSelected = selectedEntries.some(sel => sel.course === entry.course && sel.sessions.some(ses => entry.sessions.includes(ses)));
+        const isSelected = selectedEntries.some(sel => sel.id === entry.id);
         let newSelected;
         
         if (isSelected) {
-            newSelected = selectedEntries.filter(sel => sel.course !== entry.course || !sel.sessions.some(ses => entry.sessions.includes(ses)));
+            newSelected = selectedEntries.filter(sel => sel.id !== entry.id);
         } else {
             newSelected = [...selectedEntries, entry];
         }

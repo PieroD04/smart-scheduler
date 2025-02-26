@@ -25,14 +25,14 @@ export default function Scheduler({selectedEntries: entries}: {selectedEntries: 
                     ])
                 }
                 {
-                    entries.map((entry, index) => (
-                        entry.sessions.map((session, sessionIndex) => {
+                    entries.map((entry) => (
+                        entry.sessions.map((session, index) => {
                             const { left, top, height } = getPos(session.day, session.start, session.end);
-                            const colorClass = colors[index % colors.length];
+                            const colorClass = colors[entry.id % colors.length];
                             
                             return (
                                 <div
-                                    key={`${entry.course}-${sessionIndex}`}
+                                    key={`${entry.course}-${index}`}
                                     className={`
                                         absolute w-1/8
                                         ${colorClass}

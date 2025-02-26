@@ -7,13 +7,6 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { isBefore, isAfter, isEqual, setHours, setMinutes } from "date-fns";
 
-interface FormInput {
-    course: string;
-    professor: string;
-    modality: ModalityEnum;
-    sessions: Session[];
-}
-
 function areOverlapping(sessions: Session[]) {
     return sessions.some((sessionA, indexA) =>
         sessions.some((sessionB, indexB) =>
@@ -26,7 +19,7 @@ function areOverlapping(sessions: Session[]) {
 }
 
 export default function ScheduleForm({ addEntry, handleDialogClose }: { addEntry: (entry: ScheduleEntry) => void, handleDialogClose: () => void }) {
-    const { control, register, handleSubmit, formState: { errors }, setError, clearErrors } = useForm<FormInput>({
+    const { control, register, handleSubmit, formState: { errors }, setError, clearErrors } = useForm<ScheduleEntry>({
         defaultValues: {
             sessions: [{ day: DayEnum.monday, start: setMinutes(setHours(new Date(), 8), 0), end: setMinutes(setHours(new Date(), 9), 0) }]
         }
@@ -36,7 +29,7 @@ export default function ScheduleForm({ addEntry, handleDialogClose }: { addEntry
         name: "sessions"
     });
     
-    const onSubmit: SubmitHandler<FormInput> = (data) => {
+    const onSubmit: SubmitHandler<ScheduleEntry> = (data) => {
         clearErrors("sessions");
         if (data.sessions.length === 0) {
             setError("sessions", { type: "manual", message: "At least one session is required." });
@@ -101,8 +94,8 @@ export default function ScheduleForm({ addEntry, handleDialogClose }: { addEntry
                         return (
                             <SessionForm
                                 key={field.id}
-                                id={index.toString()}
-                                onRemove={(id) => { remove(parseInt(id)) }}
+                                id={index}
+                                onRemove={(id) => { remove(id) }}
                                 control={control}
                                 errors={errors}
                                 clearErrors={clearErrors}
@@ -124,11 +117,12 @@ export default function ScheduleForm({ addEntry, handleDialogClose }: { addEntry
     )
 }
 
-function SessionForm({ id, onRemove, control, errors, clearErrors }: { id: string, onRemove: (id: string) => void, control: Control<FormInput, any>, errors: FieldErrors<FormInput>, clearErrors: UseFormClearErrors<FormInput> }) {
+function SessionForm({ id, onRemove, control, errors, clearErrors }: 
+    { id: number, onRemove: (id: number) => void, control: Control<ScheduleEntry, any>, errors: FieldErrors<ScheduleEntry>, clearErrors: UseFormClearErrors<ScheduleEntry> }) {
     return (
         <div className="flex flex-col gap-4">
             <div className="flex flex-row justify-between items-center">
-                <div className="text-center font-medium text-lg">Session {parseInt(id) + 1}</div>
+                <div className="text-center font-medium text-lg">Session {id + 1}</div>
                 <Button
                     variant="text"
                     color="error"
@@ -139,7 +133,7 @@ function SessionForm({ id, onRemove, control, errors, clearErrors }: { id: strin
             <div className="flex flex-col">
                 <InputLabel id="day-label">Day</InputLabel>
                 <Controller
-                    name={`sessions.${parseInt(id)}.day`}
+                    name={`sessions.${id}.day`}
                     control={control}
                     render={({ field }) => (
                         <Select
@@ -164,11 +158,11 @@ function SessionForm({ id, onRemove, control, errors, clearErrors }: { id: strin
                 <InputLabel id="time-label">Time Range</InputLabel>
                 <div className="flex flex-row gap-2">
                     <Controller
-                        name={`sessions.${parseInt(id)}.start`}
+                        name={`sessions.${id}.start`}
                         control={control}
                         render={({ field }) => (
                             <TimeField
-                                color={errors.sessions?.[parseInt(id)]?.end ? "error" : "primary"}
+                                color={errors.sessions?.[id]?.end ? "error" : "primary"}
                                 value={field.value}
                                 onChange={(e) => {
                                     field.onChange(e);
@@ -179,11 +173,11 @@ function SessionForm({ id, onRemove, control, errors, clearErrors }: { id: strin
                     />
                     <div className="flex items-center">-</div>
                     <Controller
-                        name={`sessions.${parseInt(id)}.end`}
+                        name={`sessions.${id}.end`}
                         control={control}
                         rules={{
                             validate: (value, formValues) => {
-                                const startValue = formValues.sessions[parseInt(id)].start;
+                                const startValue = formValues.sessions[id].start;
                                 if (isEqual(startValue, value)) {
                                     return "Start and end time cannot be the same.";
                                 }
@@ -195,7 +189,7 @@ function SessionForm({ id, onRemove, control, errors, clearErrors }: { id: strin
                         }}
                         render={({ field }) => (
                             <TimeField
-                                color={errors.sessions?.[parseInt(id)]?.end ? "error" : "primary"}
+                                color={errors.sessions?.[id]?.end ? "error" : "primary"}
                                 value={field.value}
                                 onChange={(e) => {
                                     field.onChange(e);
@@ -206,7 +200,7 @@ function SessionForm({ id, onRemove, control, errors, clearErrors }: { id: strin
                     />
                 </div>
                 <div className="text-red-500 text-xs p-1">
-                    {errors.sessions?.[parseInt(id)]?.end?.message}
+                    {errors.sessions?.[id]?.end?.message}
                 </div>
             </div>
 

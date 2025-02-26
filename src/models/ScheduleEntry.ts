@@ -1,4 +1,5 @@
 export default interface ScheduleEntry {
+    id: number;
     course: string;
     professor: string;
     modality: ModalityEnum;

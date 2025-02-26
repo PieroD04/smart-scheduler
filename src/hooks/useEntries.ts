@@ -10,7 +10,9 @@ export default function useEntries() {
     }, []);
 
     const addEntry = (entry: ScheduleEntry) => {
-        const newEntries = [...entries, entry];
+        const newId = entries.length > 0 ? Math.max(...entries.map(e => e.id)) + 1 : 1;
+        const newEntry = { ...entry, id: newId };
+        const newEntries = [...entries, newEntry];
         setEntries(newEntries);
         localStorage.setItem(ENTRIES, JSON.stringify(newEntries));
     };
@@ -22,8 +24,8 @@ export default function useEntries() {
         }
     };
 
-    const deleteEntry = (index: number) => {
-        const newEntries = entries.filter((_, i) => i !== index);
+    const deleteEntry = (id: number) => {
+        const newEntries = entries.filter(e => e.id !== id);
         setEntries(newEntries);
         localStorage.setItem(ENTRIES, JSON.stringify(newEntries));
 
