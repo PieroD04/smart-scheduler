@@ -1,18 +1,10 @@
-import { useState, useEffect } from "react";
 import { List, ListItem, ListItemText, IconButton } from "@mui/material";
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, TouchSensor } from "@dnd-kit/core";
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import ScheduleEntry from "../models/ScheduleEntry";
 
-export default function ProfessorList({ entries, getProffesors }: { entries: ScheduleEntry[], getProffesors: () => string[] }) {
-    const [professors, setProfessors] = useState<string[]>([]);
-
-    useEffect(() => {
-        setProfessors(getProffesors());
-    }, [entries]);
-
+export default function ProfessorList({ professors, setProfessors }: { professors: string[], setProfessors: (professors: string[]) => void }) {  
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
@@ -30,19 +22,17 @@ export default function ProfessorList({ entries, getProffesors }: { entries: Sch
     const onDragEnd = (event: any) => {
         const { active, over } = event;
         if (!over || active.id === over.id) return;
-
-        setProfessors((prevProfessors) => {
-            const oldIndex = prevProfessors.indexOf(active.id);
-            const newIndex = prevProfessors.indexOf(over.id);
-            return arrayMove(prevProfessors, oldIndex, newIndex);
-        });
+        const newProfessors = arrayMove(professors, professors.indexOf(active.id), professors.indexOf(over.id));
+        setProfessors(newProfessors);
     };
 
     return (
         <>
             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
                 <SortableContext items={professors} strategy={verticalListSortingStrategy}>
-                    <List subheader={"Preferred professors"}>
+                    <List>
+                    <div className="font-semibold text-lg text-center">Preferred professors</div>
+                    <div className="font-light text-sm text-center mb-2">Order the professors by preference.</div>
                         {professors.map((professor) => (
                             <SortableItem key={professor} professor={professor} />
                         ))}

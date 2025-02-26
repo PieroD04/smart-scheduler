@@ -6,10 +6,10 @@ export default function useSelectedEntries() {
     const [selectedEntries, setSelectedEntries] = useState<ScheduleEntry[]>([]);
 
     useEffect(() => {
-        getSelectedEntries();
+        fetchSelectedEntries();
     }, []);
 
-    const getSelectedEntries = () => {
+    const fetchSelectedEntries = () => {
         const storedSelectedEntries = localStorage.getItem(SELECTED_ENTRIES);
         if (storedSelectedEntries) {
             setSelectedEntries(JSON.parse(storedSelectedEntries) as ScheduleEntry[]);
@@ -30,5 +30,5 @@ export default function useSelectedEntries() {
         localStorage.setItem(SELECTED_ENTRIES, JSON.stringify(newSelected));
     };
 
-    return { selectedEntries, getSelectedEntries, toggleSelectedEntry };
+    return { selectedEntries, toggleSelectedEntry };
 }

@@ -207,4 +207,3 @@ function SessionForm({ id, onRemove, control, errors, clearErrors }:
         </div>
     )
 }
-

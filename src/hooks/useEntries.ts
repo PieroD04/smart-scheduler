@@ -32,9 +32,5 @@ export default function useEntries() {
 
     };
 
-    const getProffesors = () => {
-        return Array.from(new Set(entries.map(entry => entry.professor)));
-    }
-
-    return { entries, addEntry, deleteEntry, getProffesors };
+    return { entries, addEntry, deleteEntry };
 }

@@ -8,12 +8,14 @@ import CloseIcon from '@mui/icons-material/Close';
 import ScheduleTable from "../components/ScheduleTable";
 import Scheduler from "../components/Scheduler";
 import ProffesorList from "../components/ProfessorList";
+import TimeRangeSelector from "../components/TimeRangeSelector";
+import usePreferences from "../hooks/usePreferences";
 
 export default function Home() {
     const [open, setOpen] = useState(false);
-
-    const { entries, addEntry, deleteEntry, getProffesors } = useEntries();
+    const { entries, addEntry, deleteEntry } = useEntries();
     const { selectedEntries, toggleSelectedEntry } = useSelectedEntries();
+    const { professors, updateProfessorOrder, timeRange, updateTimeRange } = usePreferences({ entries });
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -32,14 +34,17 @@ export default function Home() {
                 onClick={handleClickOpen}
             >Add Schedule</Button>
 
-            
-            <div className="flex flex-col overflow-x-scroll items-baseline xl:flex-row xl:justify-center m-5">
+            <div className="flex flex-col overflow-x-auto items-baseline xl:flex-row xl:justify-center m-5">
                 <div className="lg:w-3/4 sm:w-full mx-auto">
                     <ScheduleTable entries={entries} selectedEntries={selectedEntries} toggleSelectedEntry={toggleSelectedEntry} deleteEntry={deleteEntry} />
                 </div>
                 <div className="mt-4">
-                    <ProffesorList entries={entries} getProffesors={getProffesors} />
+                    <ProffesorList professors={professors} setProfessors={updateProfessorOrder} />
                 </div>
+            </div>
+
+            <div className="flex flex-col overflow-x-auto items-baseline xl:flex-row xl:justify-center m-5">
+                <TimeRangeSelector timeRange={timeRange} setTimeRange={updateTimeRange} />
             </div>
 
             <div className="m-5">
