@@ -1,12 +1,13 @@
 import { useState } from "react";
 import ScheduleForm from "../components/ScheduleForm";
 import { Button, Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
+import useEntries from "../hooks/useEntries";
+import useSelectedEntries from "../hooks/useSelectedEntries";
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import ScheduleTable from "../components/ScheduleTable";
 import Scheduler from "../components/Scheduler";
-import useEntries from "../hooks/useEntries";
-import useSelectedEntries from "../hooks/useSelectedEntries";
+import ProffesorList from "../components/ProfessorList";
 
 export default function Home() {
     const [open, setOpen] = useState(false);
@@ -30,9 +31,17 @@ export default function Home() {
                 startIcon={<AddIcon />}
                 onClick={handleClickOpen}
             >Add Schedule</Button>
-            <div className="lg:w-3/4 sm:w-full mx-auto">
-                <ScheduleTable entries={entries} selectedEntries={selectedEntries} toggleSelectedEntry={toggleSelectedEntry} deleteEntry={deleteEntry} />
+
+            
+            <div className="flex flex-col xl:flex-row">
+                <div className="lg:w-3/4 sm:w-full mx-auto">
+                    <ScheduleTable entries={entries} selectedEntries={selectedEntries} toggleSelectedEntry={toggleSelectedEntry} deleteEntry={deleteEntry} />
+                </div>
+                <div>
+                    <ProffesorList />
+                </div>
             </div>
+
             <div className="m-5">
                 <Scheduler selectedEntries={selectedEntries} />
             </div>

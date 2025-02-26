@@ -6,8 +6,15 @@ export default function useEntries() {
     const [entries, setEntries] = useState<ScheduleEntry[]>([]);
 
     useEffect(() => {
-        getEntries();
+        fetchEntries();
     }, []);
+
+    const fetchEntries = () => {
+        const storedEntries = localStorage.getItem(ENTRIES);
+        if (storedEntries) {
+            setEntries(JSON.parse(storedEntries) as ScheduleEntry[]);
+        }
+    };
 
     const addEntry = (entry: ScheduleEntry) => {
         const newId = entries.length > 0 ? Math.max(...entries.map(e => e.id)) + 1 : 1;
@@ -17,12 +24,6 @@ export default function useEntries() {
         localStorage.setItem(ENTRIES, JSON.stringify(newEntries));
     };
 
-    const getEntries = () => {
-        const storedEntries = localStorage.getItem(ENTRIES);
-        if (storedEntries) {
-            setEntries(JSON.parse(storedEntries) as ScheduleEntry[]);
-        }
-    };
 
     const deleteEntry = (id: number) => {
         const newEntries = entries.filter(e => e.id !== id);
@@ -31,5 +32,9 @@ export default function useEntries() {
 
     };
 
-    return { entries, addEntry, getEntries, deleteEntry };
+    const getProffesors = () => {
+        return Array.from(new Set(entries.map(entry => entry.professor)));
+    }
+
+    return { entries, addEntry, deleteEntry, getProffesors };
 }
