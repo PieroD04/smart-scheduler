@@ -12,7 +12,7 @@ import ProffesorList from "../components/ProfessorList";
 export default function Home() {
     const [open, setOpen] = useState(false);
 
-    const { entries, addEntry, deleteEntry } = useEntries();
+    const { entries, addEntry, deleteEntry, getProffesors } = useEntries();
     const { selectedEntries, toggleSelectedEntry } = useSelectedEntries();
 
     const handleClickOpen = () => {
@@ -33,12 +33,12 @@ export default function Home() {
             >Add Schedule</Button>
 
             
-            <div className="flex flex-col xl:flex-row">
+            <div className="flex flex-col overflow-x-scroll items-baseline xl:flex-row xl:justify-center m-5">
                 <div className="lg:w-3/4 sm:w-full mx-auto">
                     <ScheduleTable entries={entries} selectedEntries={selectedEntries} toggleSelectedEntry={toggleSelectedEntry} deleteEntry={deleteEntry} />
                 </div>
-                <div>
-                    <ProffesorList />
+                <div className="mt-4">
+                    <ProffesorList entries={entries} getProffesors={getProffesors} />
                 </div>
             </div>
 
