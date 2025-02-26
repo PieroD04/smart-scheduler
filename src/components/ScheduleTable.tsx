@@ -1,41 +1,11 @@
-import { useState, useEffect } from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import Paper from '@mui/material/Paper';
 import { format } from 'date-fns';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox, IconButton, Paper } from '@mui/material';
 import ScheduleEntry from '../models/ScheduleEntry';
-import useEntries from '../hooks/useEntries';
 
-export default function ScheduleTable({ entries, deleteEntry }: { entries: ScheduleEntry[], deleteEntry: any }) {
-    const [checked, setChecked] = useState<number[]>([]);
-    const { selectedEntries, updateSelectedEntries } = useEntries();
-
-    useEffect(() => {
-        const selectedIndexs = entries
-            .map((entry, index) => (selectedEntries.some(sel => sel.course === entry.course) ? index : -1))
-            .filter(index => index !== -1);
-        
-        setChecked(selectedIndexs);
-    }, [entries, selectedEntries]);
-
-    const handleToggle = (index: number) => {
-        setChecked(prev => {
-            const newChecked = prev.includes(index)
-                ? prev.filter(i => i !== index)
-                : [...prev, index];
-            
-            const updatedSelectedEntries = entries.filter((_, i) => newChecked.includes(i));
-            updateSelectedEntries(updatedSelectedEntries);
-
-            return newChecked;
-        });
+export default function ScheduleTable({entries, selectedEntries, toggleSelectedEntry, deleteEntry}: {entries: ScheduleEntry[], selectedEntries: ScheduleEntry[], toggleSelectedEntry: (entry: ScheduleEntry) => void, deleteEntry: (index: number) => void}) {
+    const handleToggle = (entry: ScheduleEntry) => {
+        toggleSelectedEntry(entry);
     };
 
     const handleDelete = (index: number) => {
@@ -60,8 +30,8 @@ export default function ScheduleTable({ entries, deleteEntry }: { entries: Sched
                         <TableRow key={index}>
                             <TableCell>
                                 <Checkbox
-                                    checked={checked.includes(index)}
-                                    onChange={() => handleToggle(index)}
+                                    checked={selectedEntries.some(sel => sel.course === entry.course && sel.sessions.some(ses => entry.sessions.includes(ses)))}
+                                    onChange={() => handleToggle(entry)}
                                 />
                             </TableCell>
                             <TableCell>{entry.course}</TableCell>

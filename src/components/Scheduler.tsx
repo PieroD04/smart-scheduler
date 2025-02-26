@@ -1,20 +1,12 @@
 import ScheduleEntry, { DayEnum } from "../models/ScheduleEntry";
 import { format, differenceInMinutes, getHours, getMinutes } from "date-fns";
 import "../styles/scheduler.css";
-import useEntries from "../hooks/useEntries";
-import { useEffect, useState } from "react";
+
 const days = [DayEnum.monday, DayEnum.tuesday, DayEnum.wednesday, DayEnum.thursday, DayEnum.friday, DayEnum.saturday, DayEnum.sunday];
 const hours = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`);
 const colors = ["bg-red-200", "bg-blue-200", "bg-green-200", "bg-yellow-200", "bg-purple-200", "bg-pink-200", "bg-indigo-200"];
 
-export default function Scheduler() {
-    const { selectedEntries } = useEntries();
-    const [entries, setEntries] = useState<ScheduleEntry[]>(selectedEntries);
-
-    useEffect(() => {
-        setEntries(selectedEntries);
-    }, [selectedEntries]);
-
+export default function Scheduler({selectedEntries: entries}: {selectedEntries: ScheduleEntry[]}) {
     return (
         <div className="overflow-auto">
             <div className="grid grid-cols-8 relative min-w-2xl">

@@ -3,20 +3,22 @@ import ScheduleForm from "../components/ScheduleForm";
 import { Button, Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
-import ScheduleList from "../components/ScheduleTable";
-import useEntries from "../hooks/useEntries";
+import ScheduleTable from "../components/ScheduleTable";
 import Scheduler from "../components/Scheduler";
+import useEntries from "../hooks/useEntries";
+import useSelectedEntries from "../hooks/useSelectedEntries";
 
 export default function Home() {
     const [open, setOpen] = useState(false);
-    const { entries, getEntries, deleteEntry } = useEntries();
+
+    const { entries, addEntry, deleteEntry } = useEntries();
+    const { selectedEntries, toggleSelectedEntry } = useSelectedEntries();
 
     const handleClickOpen = () => {
         setOpen(true);
     };
 
     const handleClose = () => {
-        getEntries();
         setOpen(false);
     };
 
@@ -29,10 +31,10 @@ export default function Home() {
                 onClick={handleClickOpen}
             >Add Schedule</Button>
             <div className="lg:w-3/4 sm:w-full mx-auto">
-                <ScheduleList entries={entries} deleteEntry={deleteEntry} />
+                <ScheduleTable entries={entries} selectedEntries={selectedEntries} toggleSelectedEntry={toggleSelectedEntry} deleteEntry={deleteEntry} />
             </div>
             <div className="m-5">
-                <Scheduler />
+                <Scheduler selectedEntries={selectedEntries} />
             </div>
 
             <Dialog
@@ -46,7 +48,7 @@ export default function Home() {
                     </div>
                 </DialogTitle>
                 <DialogContent>
-                    <ScheduleForm handleDialogClose={handleClose} />
+                    <ScheduleForm addEntry={addEntry} handleDialogClose={handleClose} />
                 </DialogContent>
             </Dialog>
         </div>

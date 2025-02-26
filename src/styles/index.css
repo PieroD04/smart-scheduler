@@ -1,12 +1,12 @@
-@import "tailwindcss";
+  @import "tailwindcss";
 
-@theme {
-  --font-sans: InterVariable, sans-serif;
-}
+  @theme {
+    --font-sans: InterVariable, sans-serif;
+  }
 
-body {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  min-height: 100vh;
-}
+  body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    min-height: 100vh;
+  }

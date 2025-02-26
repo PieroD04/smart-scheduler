@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 .scheduler-cell {
     border-width: 1px;
     border-color: var(--color-gray-300);

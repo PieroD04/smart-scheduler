@@ -6,7 +6,6 @@ import { TimeField } from '@mui/x-date-pickers/TimeField';
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { isBefore, isAfter, isEqual, setHours, setMinutes } from "date-fns";
-import { ENTRIES } from "../utils/constants";
 
 interface FormInput {
     course: string;
@@ -26,7 +25,7 @@ function areOverlapping(sessions: Session[]) {
     );
 }
 
-export default function ScheduleForm({ handleDialogClose }: { handleDialogClose: () => void }) {
+export default function ScheduleForm({ addEntry, handleDialogClose }: { addEntry: (entry: ScheduleEntry) => void, handleDialogClose: () => void }) {
     const { control, register, handleSubmit, formState: { errors }, setError, clearErrors } = useForm<FormInput>({
         defaultValues: {
             sessions: [{ day: DayEnum.monday, start: setMinutes(setHours(new Date(), 8), 0), end: setMinutes(setHours(new Date(), 9), 0) }]
@@ -49,8 +48,7 @@ export default function ScheduleForm({ handleDialogClose }: { handleDialogClose:
             return;
         }
 
-        localStorage.setItem(ENTRIES, JSON.stringify([...JSON.parse(localStorage.getItem(ENTRIES) || "[]"), data as ScheduleEntry]));;
-
+        addEntry(data);
         handleDialogClose();
         alert("Schedule submitted successfully!");
     }
