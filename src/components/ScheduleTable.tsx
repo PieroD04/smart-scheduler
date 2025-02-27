@@ -1,60 +1,80 @@
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { format } from 'date-fns';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox, IconButton, Paper } from '@mui/material';
-import ScheduleEntry from '../models/ScheduleEntry';
+import { Checkbox, IconButton } from '@mui/material';
+import ScheduleEntry, { Session } from '../models/ScheduleEntry';
 
-export default function ScheduleTable({entries, selectedEntries, toggleSelectedEntry, deleteEntry}:
-     {entries: ScheduleEntry[], selectedEntries: ScheduleEntry[], toggleSelectedEntry: (entry: ScheduleEntry) => void, deleteEntry: (index: number) => void}) {
-    
-    const handleToggle = (entry: ScheduleEntry) => {
-        toggleSelectedEntry(entry);
-    };
+const columns: GridColDef[] = [
+    {
+        field: 'select',
+        headerName: 'Select',
+        width: 75,
+        renderCell: (params) => (
+            <Checkbox
+                checked={params.row.selected}
+                onChange={() => params.row.toggleSelectedEntry(params.row)}
+            />
+        )
+    },
+    { field: 'course', headerName: 'Course', width: 300 },
+    { field: 'professor', headerName: 'Professor', width: 150 },
+    { field: 'modality', headerName: 'Modality', width: 120 },
+    {
+        field: 'sessions',
+        headerName: 'Sessions',
+        width: 500,
+        renderCell: (params) => (
+            <div>
+                {params.value.map((session: Session, index: number) => (
+                    <div key={index}>
+                        {session.day} {format(session.start, 'HH:mm')} - {format(session.end, 'HH:mm')}
+                    </div>
+                ))}
+            </div>
+        )
+    },
+    {
+        field: 'actions',
+        headerName: 'Actions',
+        width: 100,
+        renderCell: (params) => (
+            <IconButton onClick={() => params.row.deleteEntry(params.row.id)} aria-label="remove schedule">
+                <DeleteIcon />
+            </IconButton>
+        )
+    }
+];
 
-    const handleDelete = (index: number) => {
-        deleteEntry(index);
-    };
+export default function ScheduleTable({ entries, selectedEntries, toggleSelectedEntry, deleteEntry }: { entries: ScheduleEntry[], selectedEntries: ScheduleEntry[], toggleSelectedEntry: (entry: ScheduleEntry) => void, deleteEntry: (id: number) => void }) {
+    const paginationModel = { page: 0, pageSize: 5 };
+
+    const rows = entries.map((entry, index) => ({
+        ...entry,
+        id: entry.id || index,
+        selected: selectedEntries.some(sel => sel.id === entry.id),
+        toggleSelectedEntry,
+        deleteEntry
+    }));
 
     return (
-        <TableContainer component={Paper}>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Select</TableCell>
-                        <TableCell>Course</TableCell>
-                        <TableCell>Professor</TableCell>
-                        <TableCell>Modality</TableCell>
-                        <TableCell>Sessions</TableCell>
-                        <TableCell>Actions</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {entries.map((entry, index) => (
-                        <TableRow key={index}>
-                            <TableCell>
-                                <Checkbox
-                                    checked={selectedEntries.some(sel => sel.id === entry.id)}
-                                    onChange={() => handleToggle(entry)}
-                                />
-                            </TableCell>
-                            <TableCell>{entry.course}</TableCell>
-                            <TableCell>{entry.professor}</TableCell>
-                            <TableCell>{entry.modality}</TableCell>
-                            <TableCell>
-                                {entry.sessions.map((session, sessionIndex) => (
-                                    <div key={sessionIndex}>
-                                        {session.day} {format(session.start, 'HH:mm')} - {format(session.end, 'HH:mm')}
-                                    </div>
-                                ))}
-                            </TableCell>
-                            <TableCell>
-                                <IconButton onClick={() => handleDelete(entry.id)} aria-label="remove schedule">
-                                    <DeleteIcon />
-                                </IconButton>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <DataGrid
+            rows={rows}
+            columns={columns}
+            initialState={{ pagination: { paginationModel } }}
+            pageSizeOptions={[5, 10, 15, 20]}
+            pagination
+            disableColumnSorting
+            disableColumnMenu
+            disableAutosize
+            disableRowSelectionOnClick
+            getRowHeight={() => 'auto'}
+            sx={{
+                "& .MuiDataGrid-cell": {
+                    display: "flex",
+                    alignItems: "center",
+                    padding: "5px"
+                }
+            }}
+        />
     );
 }

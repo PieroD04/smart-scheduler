@@ -4,7 +4,7 @@ import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } 
 import { CSS } from "@dnd-kit/utilities";
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 
-export default function ProfessorList({ professors, setProfessors }: { professors: string[], setProfessors: (professors: string[]) => void }) {  
+export default function ProfessorList({ professors, setProfessors }: { professors: string[], setProfessors: (professors: string[]) => void }) {
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
@@ -27,19 +27,17 @@ export default function ProfessorList({ professors, setProfessors }: { professor
     };
 
     return (
-        <>
-            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
-                <SortableContext items={professors} strategy={verticalListSortingStrategy}>
-                    <List>
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+            <SortableContext items={professors} strategy={verticalListSortingStrategy}>
+                <List>
                     <div className="font-semibold text-lg text-center">Preferred professors</div>
                     <div className="font-light text-sm text-center mb-2">Order the professors by preference.</div>
-                        {professors.map((professor) => (
-                            <SortableItem key={professor} professor={professor} />
-                        ))}
-                    </List>
-                </SortableContext>
-            </DndContext>
-        </>
+                    {professors.map((professor) => (
+                        <SortableItem key={professor} professor={professor} />
+                    ))}
+                </List>
+            </SortableContext>
+        </DndContext>
     );
 }
 
