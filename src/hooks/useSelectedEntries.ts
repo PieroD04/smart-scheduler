@@ -16,6 +16,11 @@ export default function useSelectedEntries() {
         }
     };
 
+    const updateSelectedEntries = (entries: ScheduleEntry[]) => {
+        setSelectedEntries(entries);
+        localStorage.setItem(SELECTED_ENTRIES, JSON.stringify(entries));
+    };
+
     const toggleSelectedEntry = (entry: ScheduleEntry) => {
         const isSelected = selectedEntries.some(sel => sel.id === entry.id);
         let newSelected;
@@ -30,5 +35,5 @@ export default function useSelectedEntries() {
         localStorage.setItem(SELECTED_ENTRIES, JSON.stringify(newSelected));
     };
 
-    return { selectedEntries, toggleSelectedEntry };
+    return { selectedEntries, updateSelectedEntries, toggleSelectedEntry };
 }

@@ -4,22 +4,30 @@ import { Button, Dialog, DialogContent, DialogTitle, IconButton } from "@mui/mat
 import useEntries from "../hooks/useEntries";
 import useSelectedEntries from "../hooks/useSelectedEntries";
 import AddIcon from '@mui/icons-material/Add';
+import BuildIcon from '@mui/icons-material/Build';
 import CloseIcon from '@mui/icons-material/Close';
 import ScheduleTable from "../components/ScheduleTable";
 import Scheduler from "../components/Scheduler";
 import ProffesorList from "../components/ProfessorList";
 import TimeRangeSelector from "../components/TimeRangeSelector";
 import usePreferences from "../hooks/usePreferences";
+import optimizeSchedule from "../utils/optimizeSchedule";
 
 export default function Home() {
     const [open, setOpen] = useState(false);
     const { entries, addEntry, deleteEntry } = useEntries();
-    const { selectedEntries, toggleSelectedEntry } = useSelectedEntries();
+    const { selectedEntries, updateSelectedEntries, toggleSelectedEntry } = useSelectedEntries();
     const { professors, updateProfessorOrder, timeRange, updateTimeRange } = usePreferences({ entries });
 
     const handleClickOpen = () => {
         setOpen(true);
     };
+
+    const handleOptimize = () => {
+        const optimizedEntries = optimizeSchedule(entries, professors, timeRange);
+        console.log(optimizedEntries);
+        updateSelectedEntries(optimizedEntries);
+    }
 
     const handleClose = () => {
         setOpen(false);
@@ -27,12 +35,21 @@ export default function Home() {
 
     return (
         <div>
-            <h1 className="text-3xl font-bold p-2">Smart Scheduler</h1>
-            <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={handleClickOpen}
-            >Add Schedule</Button>
+            <div className="text-3xl font-bold text-center p-1">Smart Scheduler</div>
+            <div className="text-xl font-normal text-center mb-2">Optimize your schedule with ease</div>
+            <div className="flex flex-row justify-center items-center gap-5">
+                <Button
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={handleClickOpen}
+                >Add Schedule Entry</Button>
+                <Button
+                    variant="contained"
+                    startIcon={<BuildIcon />}
+                    onClick={handleOptimize}
+                >Optimize Schedule</Button>
+            </div>
+
 
             <div className="flex flex-col overflow-x-auto items-baseline xl:flex-row xl:justify-center m-5">
                 <div className="lg:w-3/4 sm:w-full mx-auto">
