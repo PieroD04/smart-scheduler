@@ -32,9 +32,15 @@ export default function ProfessorList({ professors, setProfessors }: { professor
                 <List>
                     <div className="font-semibold text-lg text-center">Preferred professors</div>
                     <div className="font-light text-sm text-center mb-2">Order the professors by preference.</div>
-                    {professors.map((professor) => (
-                        <SortableItem key={professor} professor={professor} />
-                    ))}
+                    {
+                        professors.length === 0 ? (
+                            <p className="text-center text-sm">No professors available</p>
+                        ) : (
+                            professors.map((professor) => (
+                                <SortableItem key={professor} professor={professor} />
+                            ))
+                        )
+                    }
                 </List>
             </SortableContext>
         </DndContext>
