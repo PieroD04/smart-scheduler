@@ -37,7 +37,9 @@ export default function Scheduler({selectedEntries: entries}: {selectedEntries: 
                                         absolute w-1/8
                                         ${colorClass}
                                         scheduler-cell
-                                        flex-col overflow-y-hidden`
+                                        flex-col 
+                                        overflow-hidden
+                                        `
                                     }
                                     style={{
                                         left: `calc(${left + 1} * 12.5%)`,
@@ -45,9 +47,9 @@ export default function Scheduler({selectedEntries: entries}: {selectedEntries: 
                                         height: `${height * 75}px`
                                     }}
                                 >
-                                    <p className="font-bold text-sm">{entry.course}</p>
-                                    <p className="text-xs">{entry.professor}</p>
-                                    <p className="text-xs">{entry.modality} ({format(session.start, "HH:mm")} - {format(session.end, "HH:mm")})</p>
+                                    <p className="font-bold text-wrap text-xs lg:text-sm xl:text-base">{entry.course}</p>
+                                    <p className="text-xs lg:text-sm xl:text-base">{entry.professor}</p>
+                                    <p className="text-xs lg:text-sm xl:text-base">{entry.modality} ({format(session.start, "HH:mm")} - {format(session.end, "HH:mm")})</p>
                                 </div>
                             );
                         })
@@ -55,7 +57,6 @@ export default function Scheduler({selectedEntries: entries}: {selectedEntries: 
                 }
             </div>
         </div>
-
     );
 }
 

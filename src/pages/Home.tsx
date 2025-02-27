@@ -49,15 +49,16 @@ export default function Home() {
                     onClick={handleOptimize}
                 >Optimize Schedule</Button>
             </div>
-            <div className="mt-4">
+            <div className="md:w-11/12 md:mx-auto mt-5">
                 <ScheduleTable entries={entries} selectedEntries={selectedEntries} toggleSelectedEntry={toggleSelectedEntry} deleteEntry={deleteEntry} />
             </div>
-            <div className="mt-4">
-                <ProffesorList professors={professors} setProfessors={updateProfessorOrder} />
-            </div>
-
-            <div className="m-5">
-                <TimeRangeSelector timeRange={timeRange} setTimeRange={updateTimeRange} />
+            <div className="grid grid-rows-1 md:grid-cols-2 gap-5">
+                <div className="m-5">
+                    <ProffesorList professors={professors} setProfessors={updateProfessorOrder} />
+                </div>
+                <div className="flex flex-row justify-center items-center gap-5 m-5">
+                    <TimeRangeSelector timeRange={timeRange} setTimeRange={updateTimeRange} />
+                </div>
             </div>
 
             <div className="m-5">
