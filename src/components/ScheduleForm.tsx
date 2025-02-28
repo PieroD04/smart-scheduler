@@ -118,7 +118,7 @@ export default function ScheduleForm({ addEntry, handleDialogClose }: { addEntry
 }
 
 function SessionForm({ id, onRemove, control, errors, clearErrors }: 
-    { id: number, onRemove: (id: number) => void, control: Control<ScheduleEntry, any>, errors: FieldErrors<ScheduleEntry>, clearErrors: UseFormClearErrors<ScheduleEntry> }) {
+    { id: number, onRemove: (id: number) => void, control: Control<ScheduleEntry, undefined>, errors: FieldErrors<ScheduleEntry>, clearErrors: UseFormClearErrors<ScheduleEntry> }) {
     return (
         <div className="flex flex-col gap-4">
             <div className="flex flex-row justify-between items-center">

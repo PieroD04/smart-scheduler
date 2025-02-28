@@ -1,5 +1,5 @@
 import { List, ListItem, ListItemText, IconButton } from "@mui/material";
-import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, TouchSensor } from "@dnd-kit/core";
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, TouchSensor, DragEndEvent } from "@dnd-kit/core";
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
@@ -19,10 +19,11 @@ export default function ProfessorList({ professors, setProfessors }: { professor
         })
     );
 
-    const onDragEnd = (event: any) => {
+    const onDragEnd = (event: DragEndEvent) => {
+        console.log(event);
         const { active, over } = event;
         if (!over || active.id === over.id) return;
-        const newProfessors = arrayMove(professors, professors.indexOf(active.id), professors.indexOf(over.id));
+        const newProfessors = arrayMove(professors, professors.indexOf(active.id.toString()), professors.indexOf(over.id.toString()));
         setProfessors(newProfessors);
     };
 
