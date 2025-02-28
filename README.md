@@ -4,8 +4,6 @@ Smart Scheduler is a web application designed to help users optimize their sched
 You can access the deployed version of the Smart Scheduler here:
 👉 [Smart Scheduler Live Demo](https://smart-scheduler.netlify.app)
 
----
-
 ## ✨ Features
 📅 **Schedule Management**: Add, edit, and delete schedule entries with details such as course name, professor, modality (in-person, virtual, hybrid), and session times.
 
@@ -17,8 +15,6 @@ You can access the deployed version of the Smart Scheduler here:
 
 📊 **Visual Schedule**: View the schedule in a grid format with days of the week and hours, making it easy to see class timings at a glance.
 
----
-
 ## 🛠️ Technologies Used
 - **React**: A JavaScript library for building user interfaces.
 - **TypeScript**: A typed superset of JavaScript that improves code quality and readability.
@@ -27,8 +23,6 @@ You can access the deployed version of the Smart Scheduler here:
 - **Tailwind CSS**: A utility-first CSS framework for rapid UI development.
 - **date-fns**: A modern JavaScript date utility library for manipulating dates and times.
 - **Dnd-kit**: A lightweight and performant library for drag-and-drop functionality.
-
----
 
 ## 🚀 Getting Started
 ### Prerequisites
@@ -70,8 +64,6 @@ To lint the code, run:
 npm run lint
 ```
 
----
-
 ## 📂 Project Structure
 ```
 pierod04-smart-scheduler/
@@ -111,8 +103,6 @@ pierod04-smart-scheduler/
         └── optimizeSchedule.ts
 ```
 
----
-
 ## 🎯 Usage
 1. Add Schedule Entries: Click the "Add Schedule Entry" button to open a form where you can input course details, select a professor, choose a modality, and set session times.
 
@@ -121,8 +111,6 @@ pierod04-smart-scheduler/
 3. Optimize Schedule: Click the "Optimize Schedule" button to automatically optimize your schedule based on your preferences.
 
 4. View Schedule: The optimized schedule will be displayed in a grid format, showing the days of the week and hours. You can also view the schedule in a table format for more details.
-
----
 
 ## 🤝 Contributing
 Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
