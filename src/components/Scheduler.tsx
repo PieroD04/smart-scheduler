@@ -2,11 +2,25 @@ import ScheduleEntry, { DayEnum } from "../models/ScheduleEntry";
 import { format, differenceInMinutes, getHours, getMinutes } from "date-fns";
 import "../styles/scheduler.css";
 
-const days = [DayEnum.monday, DayEnum.tuesday, DayEnum.wednesday, DayEnum.thursday, DayEnum.friday, DayEnum.saturday, DayEnum.sunday];
-const hours = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`);
-const colors = ["bg-red-200", "bg-blue-200", "bg-green-200", "bg-yellow-200", "bg-purple-200", "bg-pink-200", "bg-indigo-200"];
+export default function Scheduler({ entries, selectedEntries }: { entries: ScheduleEntry[], selectedEntries: number[] }) {
+    const days = [DayEnum.monday, DayEnum.tuesday, DayEnum.wednesday, DayEnum.thursday, DayEnum.friday, DayEnum.saturday, DayEnum.sunday];
+    const minHour = Math.min(...entries.flatMap(e => e.sessions.map(s => getHours(s.start))));
+    const maxHour = Math.max(...entries.flatMap(e => e.sessions.map(s => getHours(s.end))));
 
-export default function Scheduler({entries, selectedEntries}: {entries: ScheduleEntry[], selectedEntries: number[]}) {
+    const hours = Array.from({ length: maxHour - minHour + 1 }, (_, i) =>
+        `${String(i + minHour).padStart(2, '0')}:00`
+    );
+
+    const colors = ["bg-red-200", "bg-blue-200", "bg-green-200", "bg-yellow-200", "bg-purple-200", "bg-pink-200", "bg-indigo-200"];
+
+    const getPos = (day: DayEnum, start: Date, end: Date) => {
+        const left = days.indexOf(day);
+        const top = getHours(start) + getMinutes(start) / 60 - minHour;
+        const height = differenceInMinutes(end, start) / 60;
+        
+        return { left, top, height };
+    };
+
     return (
         <div className="overflow-auto">
             <div className="grid grid-cols-8 relative min-w-2xl">
@@ -30,7 +44,7 @@ export default function Scheduler({entries, selectedEntries}: {entries: Schedule
                         entry.sessions.map((session, index) => {
                             const { left, top, height } = getPos(session.day, session.start, session.end);
                             const colorClass = colors[entry.id % colors.length];
-                            
+
                             return (
                                 <div
                                     key={`${entry.course}-${index}`}
@@ -59,12 +73,4 @@ export default function Scheduler({entries, selectedEntries}: {entries: Schedule
             </div>
         </div>
     );
-}
-
-function getPos(day: DayEnum, start: Date, end: Date) {
-    const left = days.indexOf(day);
-    const top = getHours(start) + getMinutes(start) / 60;
-    const height = differenceInMinutes(end, start) / 60;
-
-    return { left, top, height };
 }

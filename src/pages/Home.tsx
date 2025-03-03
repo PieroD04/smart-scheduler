@@ -36,8 +36,8 @@ export default function Home() {
 
     return (
         <div>
-            <div className="text-3xl font-bold text-center p-1">Smart Scheduler</div>
-            <div className="text-xl font-normal text-center mb-2">Optimize your schedule with ease</div>
+            <div className="text-3xl font-bold text-center p-5 pb-0">Smart Scheduler</div>
+            <div className="text-xl font-light text-center mb-2">Optimize your schedule with ease</div>
             <div className="md:w-11/12 md:mx-auto mt-5">
                 <ScheduleTable entries={entries} selectedEntries={selectedEntries} toggleSelectedEntry={toggleSelectedEntry} updateEntry={(id: number) => handleClickOpen(id)} deleteEntry={deleteEntry} />
             </div>
