@@ -24,6 +24,14 @@ export default function useEntries() {
         localStorage.setItem(ENTRIES, JSON.stringify(newEntries));
     };
 
+    const updateEntry = (entry: ScheduleEntry) => {
+        console.log(entry);
+        const newEntries = entries.map(e => e.id === entry.id ? entry : e);
+        console.log(newEntries);
+        setEntries(newEntries);
+        localStorage.setItem(ENTRIES, JSON.stringify(newEntries));
+    };
+
 
     const deleteEntry = (id: number) => {
         const newEntries = entries.filter(e => e.id !== id);
@@ -32,5 +40,5 @@ export default function useEntries() {
 
     };
 
-    return { entries, addEntry, deleteEntry };
+    return { entries, addEntry, updateEntry, deleteEntry };
 }

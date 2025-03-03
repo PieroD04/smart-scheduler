@@ -1,5 +1,6 @@
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { format } from 'date-fns';
+import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Checkbox, IconButton } from '@mui/material';
 import ScheduleEntry, { Session } from '../models/ScheduleEntry';
@@ -38,21 +39,29 @@ const columns: GridColDef[] = [
         headerName: 'Actions',
         width: 100,
         renderCell: (params) => (
-            <IconButton onClick={() => params.row.deleteEntry(params.row.id)} aria-label="remove schedule">
-                <DeleteIcon />
-            </IconButton>
+            <>
+                <IconButton onClick={() => params.row.updateEntry(params.row.id)} aria-label="edit schedule">
+                    <EditIcon />
+                </IconButton>
+                <IconButton onClick={() => params.row.deleteEntry(params.row.id)} aria-label="remove schedule">
+                    <DeleteIcon />
+                </IconButton>
+            </>
+
         )
     }
 ];
 
-export default function ScheduleTable({ entries, selectedEntries, toggleSelectedEntry, deleteEntry }: { entries: ScheduleEntry[], selectedEntries: ScheduleEntry[], toggleSelectedEntry: (entry: ScheduleEntry) => void, deleteEntry: (id: number) => void }) {
+export default function ScheduleTable({ entries, selectedEntries, toggleSelectedEntry, updateEntry, deleteEntry }:
+    { entries: ScheduleEntry[], selectedEntries: number[], toggleSelectedEntry: (entry: ScheduleEntry) => void, updateEntry: (id: number) => void, deleteEntry: (id: number) => void }) {
     const paginationModel = { page: 0, pageSize: 5 };
 
     const rows = entries.map((entry, index) => ({
         ...entry,
         id: entry.id || index,
-        selected: selectedEntries.some(sel => sel.id === entry.id),
+        selected: selectedEntries.some(sel => sel === entry.id),
         toggleSelectedEntry,
+        updateEntry,
         deleteEntry
     }));
 

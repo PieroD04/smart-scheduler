@@ -3,7 +3,7 @@ import { SELECTED_ENTRIES } from '../utils/constants';
 import ScheduleEntry from '../models/ScheduleEntry';
 
 export default function useSelectedEntries() {
-    const [selectedEntries, setSelectedEntries] = useState<ScheduleEntry[]>([]);
+    const [selectedEntries, setSelectedEntries] = useState<number[]>([]);
 
     useEffect(() => {
         fetchSelectedEntries();
@@ -12,23 +12,24 @@ export default function useSelectedEntries() {
     const fetchSelectedEntries = () => {
         const storedSelectedEntries = localStorage.getItem(SELECTED_ENTRIES);
         if (storedSelectedEntries) {
-            setSelectedEntries(JSON.parse(storedSelectedEntries) as ScheduleEntry[]);
+            setSelectedEntries(JSON.parse(storedSelectedEntries));
         }
     };
 
     const updateSelectedEntries = (entries: ScheduleEntry[]) => {
-        setSelectedEntries(entries);
-        localStorage.setItem(SELECTED_ENTRIES, JSON.stringify(entries));
+        const ids = entries.map(entry => entry.id);
+        setSelectedEntries(ids);
+        localStorage.setItem(SELECTED_ENTRIES, JSON.stringify(ids));
     };
 
     const toggleSelectedEntry = (entry: ScheduleEntry) => {
-        const isSelected = selectedEntries.some(sel => sel.id === entry.id);
+        const isSelected = selectedEntries.some(sel => sel === entry.id);
         let newSelected;
         
         if (isSelected) {
-            newSelected = selectedEntries.filter(sel => sel.id !== entry.id);
+            newSelected = selectedEntries.filter(sel => sel !== entry.id);
         } else {
-            newSelected = [...selectedEntries, entry];
+            newSelected = [...selectedEntries, entry.id];
         }
         
         setSelectedEntries(newSelected);

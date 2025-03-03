@@ -6,7 +6,7 @@ const days = [DayEnum.monday, DayEnum.tuesday, DayEnum.wednesday, DayEnum.thursd
 const hours = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`);
 const colors = ["bg-red-200", "bg-blue-200", "bg-green-200", "bg-yellow-200", "bg-purple-200", "bg-pink-200", "bg-indigo-200"];
 
-export default function Scheduler({selectedEntries: entries}: {selectedEntries: ScheduleEntry[]}) {
+export default function Scheduler({entries, selectedEntries}: {entries: ScheduleEntry[], selectedEntries: number[]}) {
     return (
         <div className="overflow-auto">
             <div className="grid grid-cols-8 relative min-w-2xl">
@@ -26,6 +26,7 @@ export default function Scheduler({selectedEntries: entries}: {selectedEntries: 
                 }
                 {
                     entries.map((entry) => (
+                        selectedEntries.includes(entry.id) &&
                         entry.sessions.map((session, index) => {
                             const { left, top, height } = getPos(session.day, session.start, session.end);
                             const colorClass = colors[entry.id % colors.length];

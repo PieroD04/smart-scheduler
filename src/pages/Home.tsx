@@ -12,20 +12,22 @@ import ProffesorList from "../components/ProfessorList";
 import TimeRangeSelector from "../components/TimeRangeSelector";
 import usePreferences from "../hooks/usePreferences";
 import optimizeSchedule from "../utils/optimizeSchedule";
+import ScheduleEntry from "../models/ScheduleEntry";
 
 export default function Home() {
     const [open, setOpen] = useState(false);
-    const { entries, addEntry, deleteEntry } = useEntries();
+    const [selectedEntry, setSelectedEntry] = useState<ScheduleEntry | null>(null);
+    const { entries, addEntry, updateEntry, deleteEntry } = useEntries();
     const { selectedEntries, updateSelectedEntries, toggleSelectedEntry } = useSelectedEntries();
     const { professors, updateProfessorOrder, timeRange, updateTimeRange } = usePreferences({ entries });
 
-    const handleClickOpen = () => {
+    const handleClickOpen = (id: number | null = null) => {
+        id ? setSelectedEntry(entries.find(entry => entry.id === id) || null) : setSelectedEntry(null);
         setOpen(true);
     };
 
     const handleOptimize = () => {
         const optimizedEntries = optimizeSchedule(entries, professors, timeRange);
-        console.log(optimizedEntries);
         updateSelectedEntries(optimizedEntries);
     }
 
@@ -41,7 +43,7 @@ export default function Home() {
                 <Button
                     variant="contained"
                     startIcon={<AddIcon />}
-                    onClick={handleClickOpen}
+                    onClick={() => handleClickOpen}
                 >Add Schedule Entry</Button>
                 <Button
                     variant="contained"
@@ -50,7 +52,7 @@ export default function Home() {
                 >Optimize Schedule</Button>
             </div>
             <div className="md:w-11/12 md:mx-auto mt-5">
-                <ScheduleTable entries={entries} selectedEntries={selectedEntries} toggleSelectedEntry={toggleSelectedEntry} deleteEntry={deleteEntry} />
+                <ScheduleTable entries={entries} selectedEntries={selectedEntries} toggleSelectedEntry={toggleSelectedEntry} updateEntry={(id: number) => handleClickOpen(id)} deleteEntry={deleteEntry} />
             </div>
             <div className="grid grid-rows-1 md:grid-cols-2 gap-5">
                 <div className="m-5">
@@ -62,7 +64,7 @@ export default function Home() {
             </div>
 
             <div className="m-5">
-                <Scheduler selectedEntries={selectedEntries} />
+                <Scheduler entries={entries} selectedEntries={selectedEntries} />
             </div>
 
             <Dialog
@@ -76,7 +78,7 @@ export default function Home() {
                     </div>
                 </DialogTitle>
                 <DialogContent>
-                    <ScheduleForm addEntry={addEntry} handleDialogClose={handleClose} />
+                    <ScheduleForm entry={selectedEntry} addEntry={addEntry} updateEntry={updateEntry} handleDialogClose={handleClose} />
                 </DialogContent>
             </Dialog>
         </div>

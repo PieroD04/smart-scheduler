@@ -20,7 +20,6 @@ export default function ProfessorList({ professors, setProfessors }: { professor
     );
 
     const onDragEnd = (event: DragEndEvent) => {
-        console.log(event);
         const { active, over } = event;
         if (!over || active.id === over.id) return;
         const newProfessors = arrayMove(professors, professors.indexOf(active.id.toString()), professors.indexOf(over.id.toString()));
