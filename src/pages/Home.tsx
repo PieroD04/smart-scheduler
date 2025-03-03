@@ -1,10 +1,8 @@
 import { useState } from "react";
 import ScheduleForm from "../components/ScheduleForm";
-import { Button, Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import useEntries from "../hooks/useEntries";
 import useSelectedEntries from "../hooks/useSelectedEntries";
-import AddIcon from '@mui/icons-material/Add';
-import BuildIcon from '@mui/icons-material/Build';
 import CloseIcon from '@mui/icons-material/Close';
 import ScheduleTable from "../components/ScheduleTable";
 import Scheduler from "../components/Scheduler";
@@ -13,6 +11,7 @@ import TimeRangeSelector from "../components/TimeRangeSelector";
 import usePreferences from "../hooks/usePreferences";
 import optimizeSchedule from "../utils/optimizeSchedule";
 import ScheduleEntry from "../models/ScheduleEntry";
+import SpeedDial from "../components/SpeedDial";
 
 export default function Home() {
     const [open, setOpen] = useState(false);
@@ -39,18 +38,6 @@ export default function Home() {
         <div>
             <div className="text-3xl font-bold text-center p-1">Smart Scheduler</div>
             <div className="text-xl font-normal text-center mb-2">Optimize your schedule with ease</div>
-            <div className="flex flex-row justify-center items-center gap-5">
-                <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    onClick={() => handleClickOpen}
-                >Add Schedule Entry</Button>
-                <Button
-                    variant="contained"
-                    startIcon={<BuildIcon />}
-                    onClick={handleOptimize}
-                >Optimize Schedule</Button>
-            </div>
             <div className="md:w-11/12 md:mx-auto mt-5">
                 <ScheduleTable entries={entries} selectedEntries={selectedEntries} toggleSelectedEntry={toggleSelectedEntry} updateEntry={(id: number) => handleClickOpen(id)} deleteEntry={deleteEntry} />
             </div>
@@ -81,6 +68,9 @@ export default function Home() {
                     <ScheduleForm entry={selectedEntry} addEntry={addEntry} updateEntry={updateEntry} handleDialogClose={handleClose} />
                 </DialogContent>
             </Dialog>
+            <div className="fixed bottom-5 right-5">
+                <SpeedDial handleAdd={handleClickOpen} handleOptimize={handleOptimize} handleExport={() => {}} />
+            </div>
         </div>
     )
 }
