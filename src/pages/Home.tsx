@@ -22,7 +22,8 @@ export default function Home() {
     const { professors, updateProfessorOrder, timeRange, updateTimeRange } = usePreferences({ entries });
 
     const handleClickOpen = (id: number | null = null) => {
-        id ? setSelectedEntry(entries.find(entry => entry.id === id) || null) : setSelectedEntry(null);
+        if (id) setSelectedEntry(entries.find(entry => entry.id === id) || null)
+        else setSelectedEntry(null);
         setOpen(true);
     };
 

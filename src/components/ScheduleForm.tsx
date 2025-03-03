@@ -45,8 +45,10 @@ export default function ScheduleForm({ entry, addEntry, updateEntry, handleDialo
             setError("sessions", { type: "manual", message: "Sessions cannot overlap." });
             return;
         }
+        
+        if (entry) updateEntry({ ...data, id: entry.id });
+        else addEntry(data);
 
-        entry ? updateEntry({ ...data, id: entry.id }) : addEntry(data);
         handleDialogClose();
         alert("Schedule submitted successfully!");
     }
