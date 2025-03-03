@@ -1,4 +1,4 @@
-import { isBefore, isAfter, getHours } from 'date-fns';
+import { getHours } from 'date-fns';
 import { TimeRange } from "../models/Preferences";
 import ScheduleEntry, { Session } from "../models/ScheduleEntry";
 
@@ -13,7 +13,6 @@ export default function optimizeSchedule(entries: ScheduleEntry[], professors: s
     // 7. The function should return the optimized array of ScheduleEntry objects
     // 8. The input array of ScheduleEntry objects can repeat the same course and professor but with different time ranges
     // 9. The output should maximize the number of courses scheduled even if it means scheduling a course with a less preferred professor or outside the preferred time range
-
     entries.sort((a, b) => {
         if (a.course === b.course) {
             return professors.indexOf(a.professor) - professors.indexOf(b.professor);
@@ -38,11 +37,17 @@ export default function optimizeSchedule(entries: ScheduleEntry[], professors: s
         const hasOverlap = optimizedEntries.some(scheduledEntry => {
             return scheduledEntry.sessions.some(scheduledSession => {
                 return entry.sessions.some(session => {
+                    const startHour1 = getHours(session.start);
+                    const endHour1 = getHours(session.end);
+                    const startHour2 = getHours(scheduledSession.start);
+                    const endHour2 = getHours(scheduledSession.end);
+
                     return session.day === scheduledSession.day &&
-                        ((isBefore(session.start, scheduledSession.end) && isAfter(session.end, scheduledSession.start)));
+                        (startHour1 < endHour2 && endHour1 > startHour2);
                 });
             });
         });
+
 
         if (!hasOverlap) {
             if (isPreferredTime) {
