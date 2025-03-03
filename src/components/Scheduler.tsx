@@ -22,19 +22,19 @@ export default function Scheduler({ entries, selectedEntries }: { entries: Sched
     };
 
     return (
-        <div className="overflow-auto">
+        <div className="scheduler-container overflow-auto">
             <div className="grid grid-cols-8 relative min-w-2xl">
-                <div className="scheduler-cell font-medium">Hours</div>
+                <div className="scheduler-cell bg-white font-medium">Hours</div>
                 {
                     days.map((day, index) => (
-                        <div className="scheduler-cell w-full font-medium" key={day}>{days[index]}</div>
+                        <div className="scheduler-cell bg-white w-full font-medium" key={day}>{days[index]}</div>
                     ))
                 }
                 {
                     hours.map((hour) => [
-                        <div className="scheduler-cell" key={hour}>{hour}</div>,
+                        <div className="scheduler-cell bg-white" key={hour}>{hour}</div>,
                         days.map((day) => (
-                            <div key={`${day}-${hour}`} className="scheduler-cell" />
+                            <div key={`${day}-${hour}`} className="scheduler-cell bg-white" />
                         ))
                     ])
                 }

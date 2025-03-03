@@ -12,6 +12,7 @@ import usePreferences from "../hooks/usePreferences";
 import optimizeSchedule from "../utils/optimizeSchedule";
 import ScheduleEntry from "../models/ScheduleEntry";
 import SpeedDial from "../components/SpeedDial";
+import domtoimage from "dom-to-image"
 
 export default function Home() {
     const [open, setOpen] = useState(false);
@@ -33,6 +34,39 @@ export default function Home() {
     const handleClose = () => {
         setOpen(false);
     };
+
+    const handleExport = async () => {
+        const element = document.querySelector(".scheduler-container") as HTMLElement;
+        console.log(element);
+        if (!element) return;
+
+        // Ajustar escala para mejorar la calidad en móviles
+        const scale = window.innerWidth < 768 ? 3 : 2;
+
+        const options = {
+            width: element.scrollWidth * scale,
+            height: element.scrollHeight * scale,
+            style: {
+                transform: `scale(${scale})`,
+                transformOrigin: "top left",
+                width: `${element.scrollWidth}px`,
+                height: `${element.scrollHeight}px`,
+            }
+        };
+
+        domtoimage.toPng(element, options)
+            .then((dataUrl) => {
+                const link = document.createElement("a");
+                link.href = dataUrl;
+                link.download = "scheduler.png";
+                link.click();
+            })
+            .catch((error) => {
+                console.error("Error exporting schedule:", error);
+            });
+    };
+
+
 
     return (
         <div>
@@ -69,7 +103,7 @@ export default function Home() {
                 </DialogContent>
             </Dialog>
             <div className="fixed bottom-5 right-5">
-                <SpeedDial handleAdd={handleClickOpen} handleOptimize={handleOptimize} handleExport={() => {}} />
+                <SpeedDial handleAdd={handleClickOpen} handleOptimize={handleOptimize} handleExport={() => { handleExport() }} />
             </div>
         </div>
     )
