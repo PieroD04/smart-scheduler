@@ -4,8 +4,17 @@ import "../styles/scheduler.css";
 
 export default function Scheduler({ entries, selectedEntries }: { entries: ScheduleEntry[], selectedEntries: number[] }) {
     const days = [DayEnum.monday, DayEnum.tuesday, DayEnum.wednesday, DayEnum.thursday, DayEnum.friday, DayEnum.saturday, DayEnum.sunday];
-    const minHour = Math.min(...entries.flatMap(e => e.sessions.map(s => getHours(s.start))));
-    const maxHour = Math.max(...entries.flatMap(e => e.sessions.map(s => getHours(s.end))));
+    
+    let minHour: number, maxHour: number;
+    if (selectedEntries.length !== 0) {
+        minHour = Math.min(...entries.flatMap(e => e.sessions.map(s => getHours(s.start))));
+        maxHour = Math.max(...entries.flatMap(e => e.sessions.map(s => getHours(s.end))));
+    }
+    else {
+        minHour = 8;
+        maxHour = 18;
+    }
+    
 
     const hours = Array.from({ length: maxHour - minHour + 1 }, (_, i) =>
         `${String(i + minHour).padStart(2, '0')}:00`
