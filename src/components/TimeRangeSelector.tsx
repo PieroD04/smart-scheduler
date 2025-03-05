@@ -30,8 +30,8 @@ export default function TimeRangeSelector({ timeRange, setTimeRange }: { timeRan
     
     return (
         <div>
-            <div className="font-semibold text-lg text-center">Preferred time range</div>
-            <div className="font-light text-sm text-center mb-2">Select the time range you would like to have your classes in.</div>
+            <p className="font-semibold text-lg text-center">Preferred time range</p>
+            <p className="font-light text-sm text-center mb-2">Select the time range you would like to have your classes in.</p>
             <form className="flex flex-row gap-2">
                 <TimeField
                     label="Start"

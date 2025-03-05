@@ -71,8 +71,8 @@ export default function Home() {
 
     return (
         <div>
-            <div className="text-3xl font-bold text-center p-5 pb-0">Smart Scheduler</div>
-            <div className="text-xl font-light text-center mb-2">Optimize your schedule with ease</div>
+            <p className="text-3xl font-bold text-center p-5 pb-0">Smart Scheduler</p>
+            <p className="text-xl font-light text-center mb-2">Optimize your schedule with ease</p>
             <div className="md:w-11/12 md:mx-auto mt-5">
                 <ScheduleTable entries={entries} selectedEntries={selectedEntries} toggleSelectedEntry={toggleSelectedEntry} updateEntry={(id: number) => handleClickOpen(id)} deleteEntry={deleteEntry} />
             </div>
@@ -95,7 +95,7 @@ export default function Home() {
             >
                 <DialogTitle>
                     <div className="flex flex-row justify-between align-middle items-center">
-                        <div className="text-center font-semibold text-xl">Schedule Form</div>
+                        <p className="text-center font-semibold text-xl">Schedule Form</p>
                         <IconButton onClick={handleClose}><CloseIcon /></IconButton>
                     </div>
                 </DialogTitle>

@@ -129,7 +129,7 @@ function SessionForm({ id, onRemove, control, errors, clearErrors }:
     return (
         <div className="flex flex-col gap-4">
             <div className="flex flex-row justify-between items-center">
-                <div className="text-center font-medium text-lg">Session {id + 1}</div>
+                <p className="text-center font-medium text-lg">Session {id + 1}</p>
                 <Button
                     variant="text"
                     color="error"
@@ -206,9 +206,9 @@ function SessionForm({ id, onRemove, control, errors, clearErrors }:
                         )}
                     />
                 </div>
-                <div className="text-red-500 text-xs p-1">
+                <p className="text-red-500 text-xs p-1">
                     {errors.sessions?.[id]?.end?.message}
-                </div>
+                </p>
             </div>
 
         </div>
