@@ -17,13 +17,13 @@ const columns: GridColDef[] = [
             />
         )
     },
-    { field: 'course', headerName: 'Course', width: 300 },
-    { field: 'professor', headerName: 'Professor', width: 150 },
+    { field: 'course', headerName: 'Course', width: 350 },
+    { field: 'professor', headerName: 'Professor', width: 200 },
     { field: 'modality', headerName: 'Modality', width: 120 },
     {
         field: 'sessions',
         headerName: 'Sessions',
-        width: 500,
+        width: 300,
         renderCell: (params) => (
             <div>
                 {params.value.map((session: Session, index: number) => (

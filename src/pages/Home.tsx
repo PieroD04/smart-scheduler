@@ -12,7 +12,7 @@ import usePreferences from "../hooks/usePreferences";
 import optimizeSchedule from "../utils/optimizeSchedule";
 import ScheduleEntry from "../models/ScheduleEntry";
 import SpeedDial from "../components/SpeedDial";
-import domtoimage from "dom-to-image"
+import domtoimage from "dom-to-image";
 import Footer from "../components/Footer";
 
 export default function Home() {
@@ -23,7 +23,7 @@ export default function Home() {
     const { professors, updateProfessorOrder, timeRange, updateTimeRange } = usePreferences({ entries });
 
     const handleClickOpen = (id: number | null = null) => {
-        if (id) setSelectedEntry(entries.find(entry => entry.id === id) || null)
+        if (id) setSelectedEntry(entries.find(entry => entry.id === id) || null);
         else setSelectedEntry(null);
         setOpen(true);
     };
@@ -31,7 +31,7 @@ export default function Home() {
     const handleOptimize = () => {
         const optimizedEntries = optimizeSchedule(entries, professors, timeRange);
         updateSelectedEntries(optimizedEntries);
-    }
+    };
 
     const handleClose = () => {
         setOpen(false);
@@ -39,7 +39,6 @@ export default function Home() {
 
     const handleExport = async () => {
         const element = document.querySelector(".scheduler-container") as HTMLElement;
-        console.log(element);
         if (!element) return;
 
         const scale = window.innerWidth < 768 ? 3 : 2;
@@ -68,33 +67,39 @@ export default function Home() {
     };
 
     return (
-        <div>
-            <p className="text-3xl font-bold text-center p-5 pb-0">Smart Scheduler</p>
-            <p className="text-xl font-light text-center mb-2">Optimize your schedule with ease</p>
-            <div className="md:w-11/12 md:mx-auto mt-5">
-                <ScheduleTable entries={entries} selectedEntries={selectedEntries} toggleSelectedEntry={toggleSelectedEntry} updateEntry={(id: number) => handleClickOpen(id)} deleteEntry={deleteEntry} />
-            </div>
-            <div className="grid grid-rows-1 md:grid-cols-2 gap-5">
-                <div className="m-5">
-                    <ProffesorList professors={professors} setProfessors={updateProfessorOrder} />
+        <div className="min-h-screen flex flex-col items-center bg-gray-100">
+            <header className="w-full bg-blue-500 text-white text-center py-6 shadow-md">
+                <h1 className="text-4xl font-bold">Smart Scheduler</h1>
+                <p className="text-lg font-light mt-1">Optimize your schedule with ease</p>
+            </header>
+            <main className="w-full max-w-7xl p-2 md:p-6">
+                <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+                    <ScheduleTable 
+                        entries={entries} 
+                        selectedEntries={selectedEntries} 
+                        toggleSelectedEntry={toggleSelectedEntry} 
+                        updateEntry={(id: number) => handleClickOpen(id)} 
+                        deleteEntry={deleteEntry} 
+                    />
                 </div>
-                <div className="flex flex-row justify-center items-center gap-5 m-5">
-                    <TimeRangeSelector timeRange={timeRange} setTimeRange={updateTimeRange} />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="bg-white shadow-md rounded-lg p-6">
+                        <ProffesorList professors={professors} setProfessors={updateProfessorOrder} />
+                    </div>
+                    <div className="bg-white shadow-md rounded-lg p-6 flex justify-center">
+                        <TimeRangeSelector timeRange={timeRange} setTimeRange={updateTimeRange} />
+                    </div>
                 </div>
-            </div>
-
-            <div className="m-5">
-                <Scheduler entries={entries} selectedEntries={selectedEntries} />
-            </div>
-            <Footer/>
+                <div className="bg-white shadow-md rounded-lg p-6 mt-6">
+                    <Scheduler entries={entries} selectedEntries={selectedEntries} />
+                </div>
+            </main>
+            <Footer />
             {/* Dialog and SpeedDial Components that dont affect the main layout */}
-            <Dialog
-                open={open}
-                onClose={handleClose}
-            >
+            <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>
-                    <div className="flex flex-row justify-between align-middle items-center">
-                        <p className="text-center font-semibold text-xl">Schedule Form</p>
+                    <div className="flex justify-between items-center">
+                        <p className="text-xl font-semibold">Schedule Form</p>
                         <IconButton onClick={handleClose}><CloseIcon /></IconButton>
                     </div>
                 </DialogTitle>
@@ -103,8 +108,8 @@ export default function Home() {
                 </DialogContent>
             </Dialog>
             <div className="fixed bottom-5 right-5">
-                <SpeedDial handleAdd={handleClickOpen} handleOptimize={handleOptimize} handleExport={() => { handleExport() }} />
+                <SpeedDial handleAdd={handleClickOpen} handleOptimize={handleOptimize} handleExport={handleExport} />
             </div>
         </div>
-    )
+    );
 }

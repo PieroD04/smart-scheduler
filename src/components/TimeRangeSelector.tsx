@@ -27,27 +27,27 @@ export default function TimeRangeSelector({ timeRange, setTimeRange }: { timeRan
             }
         }
     };
-    
+
     return (
         <div>
             <p className="font-semibold text-lg text-center">Preferred time range</p>
             <p className="font-light text-sm text-center mb-2">Select the time range you would like to have your classes in.</p>
             <form className="flex flex-row gap-2">
-                <TimeField
-                    label="Start"
-                    color={error ? "error" : "primary"}
-                    value={timeRange.start}
-                    onChange={handleStartChange}
-                />
-                <div className="flex items-center">-</div>
-                <TimeField
-                    label="End"
-                    color={error ? "error" : "primary"}
-                    value={timeRange.end}
-                    onChange={handleEndChange}
-                />
-            </form>
-            <div className="text-red-500 text-xs p-1">{error}</div>                    
+                    <TimeField
+                        label="Start"
+                        color={error ? "error" : "primary"}
+                        value={timeRange.start}
+                        onChange={handleStartChange}
+                    />
+                    <p className="flex items-center">-</p>
+                    <TimeField
+                        label="End"
+                        color={error ? "error" : "primary"}
+                        value={timeRange.end}
+                        onChange={handleEndChange}
+                    />
+                </form>
+                <p className="text-red-500 text-xs p-1">{error}</p>
         </div>
     );
 }
