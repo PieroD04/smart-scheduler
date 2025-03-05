@@ -13,6 +13,7 @@ import optimizeSchedule from "../utils/optimizeSchedule";
 import ScheduleEntry from "../models/ScheduleEntry";
 import SpeedDial from "../components/SpeedDial";
 import domtoimage from "dom-to-image"
+import Footer from "../components/Footer";
 
 export default function Home() {
     const [open, setOpen] = useState(false);
@@ -41,7 +42,6 @@ export default function Home() {
         console.log(element);
         if (!element) return;
 
-        // Ajustar escala para mejorar la calidad en móviles
         const scale = window.innerWidth < 768 ? 3 : 2;
 
         const options = {
@@ -67,8 +67,6 @@ export default function Home() {
             });
     };
 
-
-
     return (
         <div>
             <p className="text-3xl font-bold text-center p-5 pb-0">Smart Scheduler</p>
@@ -88,7 +86,8 @@ export default function Home() {
             <div className="m-5">
                 <Scheduler entries={entries} selectedEntries={selectedEntries} />
             </div>
-
+            <Footer/>
+            {/* Dialog and SpeedDial Components that dont affect the main layout */}
             <Dialog
                 open={open}
                 onClose={handleClose}
