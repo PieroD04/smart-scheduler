@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ScheduleForm from "../components/ScheduleForm";
 import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import useEntries from "../hooks/useEntries";
@@ -14,13 +14,36 @@ import ScheduleEntry from "../models/ScheduleEntry";
 import SpeedDial from "../components/SpeedDial";
 import domtoimage from "dom-to-image";
 import Footer from "../components/Footer";
+import detectOverlaps from "../utils/detectOverlaps";
 
 export default function Home() {
     const [open, setOpen] = useState(false);
+    const [overlapMessage, setOverlapMessage] = useState<string>("");
     const [selectedEntry, setSelectedEntry] = useState<ScheduleEntry | null>(null);
     const { entries, addEntry, updateEntry, deleteEntry } = useEntries();
     const { selectedEntries, updateSelectedEntries, toggleSelectedEntry } = useSelectedEntries();
     const { professors, updateProfessorOrder, timeRange, updateTimeRange } = usePreferences({ entries });
+
+    useEffect(() => {
+        const selectedEntriesFull = entries.filter(e => selectedEntries.includes(e.id));
+        const overlaps = detectOverlaps(selectedEntriesFull);
+        
+        if (overlaps.length > 0) {
+            const message = overlaps.map(o => {
+                const start = new Date(o.start);
+                const end = new Date(o.end);
+                
+                return `• ${o.course1} and ${o.course2} overlap on ${o.day} from ${
+                    start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                } to ${
+                    end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                }`;
+            }).join("\n");
+            setOverlapMessage(`Schedule overlap(s) detected:\n${message}`);
+        } else {
+            setOverlapMessage("");
+        }
+    }, [selectedEntries, entries]);
 
     const handleClickOpen = (id: number | null = null) => {
         if (id) setSelectedEntry(entries.find(entry => entry.id === id) || null);
@@ -90,6 +113,11 @@ export default function Home() {
                         <TimeRangeSelector timeRange={timeRange} setTimeRange={updateTimeRange} />
                     </div>
                 </div>
+                { overlapMessage && (
+                    <div className="mt-4 p-4 bg-red-100 text-red-700 rounded-lg shadow">
+                        <pre className="whitespace-pre-wrap">{ overlapMessage }</pre>
+                    </div>
+                )}
                 <div className="bg-white shadow-md rounded-lg p-6 mt-6">
                     <Scheduler entries={entries} selectedEntries={selectedEntries} />
                 </div>
